@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ExtensionList>
+    <Extension Id="com.pq.ps2fgui">
+        <HostList>
+            <Host Name="PHXS" Port="8900"/>
+            <Host Name="IDSN" Port="8901"/>
+        </HostList>
+    </Extension>
+</ExtensionList>
