@@ -4,9 +4,9 @@ set curPath=%~dp0
 set cepPath="%APPDATA%/Adobe\CEP\extensions"
 
 if exist "%cepPath%" (
-    xcopy /c /e /r /y %curPath%com.pq.ps2fgui %cepPath%\com.pq.ps2fgui
+    xcopy /c /e /r /y %curPath%com.genii.cutout %cepPath%\com.genii.cutout
 ) else (
-    echo "未存在adobe 请先安装photoshop！"
+    echo "未存在adobe 请先安装photoshop!"
     goto toEnd
 )
 

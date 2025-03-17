@@ -2,11 +2,10 @@
 setlocal enabledelayedexpansion
 set curPath=%~dp0
 
-cd jsProject
-if not exist "%curPath%jsProject/node_modules" (
+if not exist "%curPath%node_modules" (
     call npm install
 )
-call npm run build
+call npm run win
 
 echo end
 endlocal
