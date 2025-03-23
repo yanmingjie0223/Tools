@@ -3,7 +3,7 @@
   "author": "",
   "license": "ISC",
   "version": "1.0.0",
-  "description": "ps导出fgui文件",
+  "description": "一键切图工具",
   "main": "./native/windows/builder.js",
   "scripts": {
     "win": "electron-builder --win --x64"
