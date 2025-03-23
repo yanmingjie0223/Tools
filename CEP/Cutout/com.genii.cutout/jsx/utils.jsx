@@ -1,12 +1,31 @@
 var utils = {};
 
-utils.exportFile = function (type, fDocunment, filePath) {
+/**
+ * 导出
+ * @param {*} document psd文档
+ * @param { 
+ * { 
+ * 		width: number;
+ * 		height: number;
+ * 		type: string;
+ * 		srcDocument: Document;
+ * 		layerName: string;
+ * 		outPath: string;
+ * 		name: string;
+ * 		filePath: string; 
+ * 		quality: number;
+ * } } exportInfo 导出信息
+ */
+utils.exportFile = function (document, exportInfo) {
+	var type = exportInfo.type;
+	var filePath = exportInfo.filePath;
+	var quality = exportInfo.quality;
 	switch (type) {
 		case "pdf": {
 			var pdfSaveOptions = new PDFSaveOptions();
 			pdfSaveOptions.embedColorProfile = true;
 			pdfSaveOptions.optimizeForWeb = true;
-			fDocunment.saveAs(new File(filePath), pdfSaveOptions, true);
+			document.saveAs(new File(filePath), pdfSaveOptions, true);
 			break;
 		}
 		case "jpg": {
@@ -14,38 +33,38 @@ utils.exportFile = function (type, fDocunment, filePath) {
 			jpgSaveOptions.embedColorProfile = true;
 			jpgSaveOptions.formatOptions = FormatOptions.STANDARDBASELINE;
 			jpgSaveOptions.matte = MatteType.NONE;
-			jpgSaveOptions.quality = 1;
-			fDocunment.saveAs(new File(filePath), jpgSaveOptions, true);
+			jpgSaveOptions.quality = quality / 100;
+			document.saveAs(new File(filePath), jpgSaveOptions, true);
 			break;
 		}
 		case "png": {
 			var pngSaveOptions = new PNGSaveOptions();
 			pngSaveOptions.interlaced = false;
-			fDocunment.saveAs(new File(filePath), pngSaveOptions, true);
+			document.saveAs(new File(filePath), pngSaveOptions, true);
 			break;
 		}
-		case "web_jpg": {
+		case "web-jpg": {
 			var exportOptions = new ExportOptionsSaveForWeb();
-			exportOptions.quality = 60;
+			exportOptions.quality = quality / 100;
 			exportOptions.format = SaveDocumentType.JPEG;
 			exportOptions.includeProfile = true;
-			fDocunment.exportDocument(
+			document.exportDocument(
 				new File(filePath),
 				ExportType.SAVEFORWEB,
 				exportOptions
 			);
 			break;
 		}
-		case "web_png": {
+		case "web-png": {
 			var exportOptions = new ExportOptionsSaveForWeb();
 			exportOptions.format = SaveDocumentType.PNG;
 			exportOptions.transparency = true;
 			exportOptions.interlaced = false;
-			exportOptions.quality = 60;
+			exportOptions.quality = quality;
 			exportOptions.embedColorProfile = false;
 			exportOptions.formatOptions = FormatOptions.STANDARDBASELINE;
 			exportOptions.matte = MatteType.NONE;
-			fDocunment.exportDocument(
+			document.exportDocument(
 				new File(filePath),
 				ExportType.SAVEFORWEB,
 				exportOptions
@@ -59,28 +78,33 @@ utils.exportFile = function (type, fDocunment, filePath) {
 	}
 }
 
-utils.filterLayerText = function(layers) {
-	if (!layers) return;
-
-	var layer;
-	for (var i = 0, len = layers.length; i < len; i++) {
-		layer = layers[i];
-		if (layer.kind == LayerKind.TEXT) {
-			layers[i].visible = false;
-		}
-    }
-}
-
-utils.filterText = function(docu) {
-	var layers = docu.artLayers;
-	var layerSets = docu.layerSets;
-	utils.filterLayerText(layers);
-
-	if (layerSets) {
-		var layerSet;
-		for (var i = 0; i< layerSets.length; i++) {
-			layerSet = layerSets[i];
-			utils.filterText(layerSet);
+/**
+ * 递归创建路径上未存在的文件夹
+ * @param {string} path 
+ */
+utils.dealPathFolder = function (path) {
+	var pathArr = path.split("/");
+	var len = pathArr.length;
+	if (len > 1) {
+		var curPath = pathArr[0];
+		for (var i = 1; i < len; i++) {
+			curPath += "/" + pathArr[i];
+			var curPathFolder = new Folder(curPath);
+			if (!curPathFolder.exists) {
+				curPathFolder.create();
+			}
 		}
 	}
+}
+
+/**
+ * 发生事件
+ * @param {string} type 
+ * @param {string} data 
+ */
+utils.sendEvent = function (type, data) {
+	var eventJAX = new CSXSEvent();
+	eventJAX.type = type;
+	eventJAX.data = data;
+	eventJAX.dispatch();
 }

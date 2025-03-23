@@ -1,28 +1,28 @@
-import Utils from "./Utils";
+import Utils from "./utils";
 
 export default class Main {
 
     private _csInterface: CSInterface;
 
     public constructor() {
-        this.init();
+        this.initialize();
     }
 
     public getCSInterface(): CSInterface {
         return this._csInterface;
     }
 
-    private init(): void {
+    private initialize(): void {
         const csInterface = new CSInterface();
         this._csInterface = csInterface;
         this.addListerCEPEvent();
         Utils.loadJSX(csInterface, 'lib/json2.jsx');
         Utils.loadJSX(csInterface, 'utils.jsx');
-        Utils.loadJSX(csInterface, 'batch.jsx');
+        Utils.loadJSX(csInterface, 'main.jsx');
+        Utils.loadJSX(csInterface, 'cutout.jsx');
     }
 
     private addListerCEPEvent(): void {
-        // todo: 添加cep插件中传递过来的信息
     }
 
 }

@@ -35,7 +35,8 @@
                 <Lifecycle>
                     <AutoVisible>true</AutoVisible> <!-- 设置扩展面板为可视-->
                     <StartOn>
-                        <Event>applicationActivate</Event> <!-- 响应applicationActivate事件 启动photoshop就运行该拓展 -->
+                        <!-- 响应applicationActivate事件 启动photoshop就运行该拓展 -->
+                        <!-- <Event>applicationActivate</Event>  -->
                     </StartOn>
                 </Lifecycle>
 

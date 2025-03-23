@@ -1,52 +1,41 @@
-
-const webpack = require('webpack');
+const path = require('path');
 
 module.exports = {
     entry: './index.ts',
-
-    devtool: 'none',
-    // devtool: 'eval-source-map',
-
     output: {
-        filename: '../com.genii.cutout/js/all.min.js',
+        path: path.resolve(__dirname, '../com.genii.cutout/js'),
+        filename: 'all.min.js',
+        publicPath: '/',
     },
-
+    resolve: {
+        extensions: ['.ts', '.js'],
+        alias: {
+            '@': path.resolve(__dirname, 'src'),
+        },
+    },
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.tsx?$/,
-                loader:'ts-loader'
-            },
-            {
-                test: /\.json$/,
-                loader: "json-loader"
+                use: 'ts-loader',
+                exclude: /node_modules/,
             }
-        ]
+        ],
     },
-
-    resolve: {
-        extensions: ['', '.webpack.js', '.web.js', '.tsx', '.ts', '.js']
+    devServer: {
+        compress: true,
+        port: 8888,
+        hot: true,
+        historyApiFallback: true,
     },
-
-    devServer:{
-        contentBase: 'bin', //本地服务器所加载的页面所在的目录
-        historyApiFallback: true, //不跳转
-        hot: true, //实时刷新
-        inline: true,
-        port: 8888
-    },
-
+    mode: 'production',
+    devtool: 'cheap-module-source-map',
     plugins: [
-        new webpack.BannerPlugin('版权所有，翻版必究'),
-        new webpack.optimize.UglifyJsPlugin({  //压缩混淆
-            compress: {
-                warnings: false,
-            },
-            output: {
-                comments: false,
-            },
-        }),
-        // new webpack.HotModuleReplacementPlugin(), //热加载插件,这里会出现hot-update记录文件
-    ]
-
-}
+        
+    ],
+    optimization: {
+        splitChunks: {
+            chunks: 'all',
+        },
+    },
+};

@@ -2,13 +2,124 @@
 <html>
 	<head>
 		<meta charset="utf-8">
+		<style>
+			/* 全局样式 */
+			body {
+				font-family: Arial, sans-serif;
+				background-color: #121212; /* 深黑色背景 */
+				margin: 0;
+				padding: 0;
+				height: 100vh;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				color: #e0e0e0; /* 浅灰色文字 */
+				overflow: hidden; /* 隐藏滚动条 */
+			}
+
+			/* 容器样式 */
+			.container {
+				background-color: #1e1e1e; /* 深灰色容器背景 */
+				padding: 20px;
+				border-radius: 8px;
+				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+				width: 100%; /* 宽度填充 body */
+				height: 100%; /* 高度填充 body */
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+				overflow: hidden; /* 隐藏容器内的滚动条 */
+			}
+
+			/* 输入框和复选框的容器样式 */
+			.input-group {
+				margin-bottom: 15px;
+				width: 80%; /* 限制输入框宽度 */
+				max-width: 300px; /* 最大宽度 */
+			}
+
+			/* 标签样式 */
+			label {
+				font-weight: bold;
+				color: #e0e0e0; /* 浅灰色文字 */
+			}
+
+			/* 品质标签的特殊样式 */
+			label[for="quality"] {
+				color: #ff6b6b; /* 亮红色 */
+			}
+
+			/* 复选框标签的特殊样式 */
+			label[for="all-psd"] {
+				color: #64b5f6; /* 亮蓝色 */
+				font-size: 12px;
+			}
+
+			/* 输入框样式 */
+			input[type="number"] {
+				width: 100%;
+				padding: 8px;
+				border: 1px solid #333; /* 深灰色边框 */
+				border-radius: 4px;
+				font-size: 14px;
+				background-color: #2d2d2d; /* 深灰色输入框背景 */
+				color: #e0e0e0; /* 浅灰色文字 */
+			}
+
+			/* 复选框和标签的布局 */
+			.checkbox-group {
+				display: flex;
+				align-items: center;
+			}
+
+			/* 复选框样式 */
+			input[type="checkbox"] {
+				margin-right: 10px;
+				width: auto;
+				background-color: #2d2d2d; /* 深灰色背景 */
+				border: 1px solid #333; /* 深灰色边框 */
+			}
+
+			/* 按钮样式 */
+			button {
+				width: 100%;
+				padding: 10px;
+				background-color: #64b5f6; /* 亮蓝色按钮 */
+				color: #121212; /* 深黑色文字 */
+				border: none;
+				border-radius: 4px;
+				font-size: 16px;
+				cursor: pointer;
+				transition: background-color 0.3s ease;
+			}
+
+			button:hover {
+				background-color: #42a5f5; /* 更亮的蓝色 */
+			}
+		</style>
 	</head>
 	<body>
+		<div class="container">
+			<!-- 添加品质输入框 -->
+			<div class="input-group">
+				<label for="quality">品质:</label>
+				<input type="number" id="quality" name="quality" min="0" max="100" value="60">
+			</div>
+			<!-- 添加“所有打开的PSD”复选框 -->
+			<div class="input-group checkbox-group">
+				<input type="checkbox" id="all-psd" name="all-psd">
+				<label for="all-psd">是否导出所有打开的PSD</label>
+			</div>
+			<!-- 导出按钮 -->
+			<div class="input-group">
+				<button onclick="cutoutExport()">导出</button>
+			</div>
+		</div>
+
 		<script type="text/javascript" src="./js/CSInterface.js"></script>
 		<script type="text/javascript" src="./js/Vulcan.js"></script>
 		<script type="text/javascript" src="./js/AgoraLib.js"></script>
 		<script type="text/javascript" src="./js/all.min.js"></script>
-
-		<input type="button" value="批量导出png" onclick="batchExport()" />
 	</body>
 </html>

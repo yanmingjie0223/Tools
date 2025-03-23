@@ -12,3 +12,21 @@ declare class CSInterface {
     public evalScript(scriptStr: string): void;
     public getSystemPath(path: string): void;
 }
+interface CSXSEvent {
+    type: string;
+    data: string;
+}
+interface ExportOptions {
+    /**
+     * 导出路径
+     */
+    outPath: string;
+    /**
+     * 导出品质
+     */
+    quality: number;
+    /**
+     * 是否导出所有打开psd文件
+     */
+    isAllPsd: boolean;
+}
