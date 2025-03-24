@@ -1,9 +1,6 @@
 # Cutout
 - 一键切图插件
 
-# nodejs 版本
-- ^16.20.2
-
 # 安装
 - com.genii.cutout文件拷贝到ps软件位置下面的CEP\extensions中
 - 注：如果出现未签收无法加载拓展，需要在注册表中打开调试模式
