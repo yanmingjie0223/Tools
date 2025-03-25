@@ -24,9 +24,9 @@ function cutoutExport(exportOptions) {
 		var document = docs[k];
 		if (document == aDocument || isAllPsd) {
 			app.activeDocument = document;
-			isEror = dealExportLayers(document, outPath, quality);
+			isEror = _dealExportLayers(document, outPath, quality);
 			if (isEror) {
-				logVersion();
+				_logVersion();
 				break;
 			}
 		}
@@ -37,7 +37,7 @@ function cutoutExport(exportOptions) {
 	}
 }
 
-function dealExportLayers(document, outPath, quality) {
+function _dealExportLayers(document, outPath, quality) {
 	var isEror = false;
 
 	var ref = new ActionReference();
@@ -67,7 +67,7 @@ function dealExportLayers(document, outPath, quality) {
 			// }
 
 			var layerName = layerDesc.getString(charIDToTypeID('Nm  '));
-			dealExportArtLayer(document, layerName, outPath, quality);
+			_dealExportLayer(document, layerName, outPath, quality);
 		} catch (e) {
 			isEror = true;
 			break;
@@ -77,55 +77,23 @@ function dealExportLayers(document, outPath, quality) {
 	return isEror;
 }
 
-function dealExportArtLayer(document, layerName, outPath, quality) {
-	var exportInfo = getExportInfo(document, layerName, outPath, quality);
+function _dealExportLayer(document, layerName, outPath, quality) {
+	var exportInfo = _getExportInfo(document, layerName, outPath, quality);
 	if (exportInfo != null) {
-		exportPNG(exportInfo);
+		_exportTo(exportInfo);
 	}
 }
 
-/**
- * dom api太慢使用action manager方式获取信息
- * @deprecated
- * @param {*} document 
- * @param {*} layerSet 
- * @param {*} outPath 
- * @param {*} quality 
- */
-function dealExportLayerSet(document, layerSet, outPath, quality) {
-	// 广度优先迭代来优化递归深度
-	var lSets = [layerSet];
-	while (lSets.length > 0) {
-		var curSet = lSets.pop();
-		dealExportArtLayer(document, curSet, outPath, quality);
-
-		var layers = curSet.artLayers;
-		for (var i = 0, len = layers.length; i < len; i++) {
-			dealExportArtLayer(document, layers[i].name, outPath, quality);
-		}
-
-		var childSets = curSet.layerSets;
-		if (childSets) {
-			for (var i = 0, len = childSets.length; i < len; i++) {
-				var childSet = childSets[i];
-				if (childSet.visible) {
-					lSets.push(childSets[i]);
-				}
-			}
-		}
-	}
-}
-
-function exportPNG(exportInfo) {
-	var isError = selectLayer(exportInfo);
+function _exportTo(exportInfo) {
+	var isError = _selectLayer(exportInfo);
 	if (isError) {
-		logVersion();
+		_logVersion();
 		return;
 	}
 
-	isError = dupLayer(exportInfo);
+	isError = _dupLayerNewDocument(exportInfo);
 	if (isError) {
-		logVersion();
+		_logVersion();
 		return;
 	}
 
@@ -172,51 +140,11 @@ function exportPNG(exportInfo) {
 }
 
 /**
- * 获取导出层信息
- * @param {*} document
- * @param {*} layer 
- * @param {string} outPath 
- * @param {number} globalQuality 
- * @returns 
- */
-function getExportInfo(document, layerName, outPath, globalQuality) {
-	var nameArr = layerName.split("@");
-	var nameLen = nameArr.length;
-	if (nameLen <= 1) {
-		return null;
-	}
-
-	var docName = document.name;
-	var info = {
-		width: -1,
-		height: -1,
-		type: '',
-		outPath: outPath + "/" + docName.replace(".psd", ""),
-		srcDocument: document,
-		layerName: layerName,
-		name: nameArr[0],
-		filePath: '',
-		quality: globalQuality,
-	};
-
-	for (var i = 1; i < nameLen; i++) {
-		var curName = nameArr[i];
-		if (curName) {
-			dealType(curName, info);
-			dealSize(curName, info);
-		}
-	}
-	dealDefaultInfo(info);
-
-	return info;
-}
-
-/**
  * 选择图层或者组
  * @param {*} exportInfo 
  * @returns 
  */
-function selectLayer(exportInfo) {
+function _selectLayer(exportInfo) {
 	var isEror = false;
 
 	var desc97 = new ActionDescriptor();
@@ -239,7 +167,7 @@ function selectLayer(exportInfo) {
  * @param {*} exportInfo 
  * @returns 
  */
-function dupLayer(exportInfo) {
+function _dupLayerNewDocument(exportInfo) {
 	var isEror = false;
 
 	var desc143 = new ActionDescriptor();
@@ -267,29 +195,65 @@ function dupLayer(exportInfo) {
 }
 
 /**
- * 判断图层或者组是否导出，如果是隐藏状态不导出
+ * 获取导出层信息
+ * @param {*} document
  * @param {*} layer 
- * @returns 
- */
-function isExport(layer) {
-	if (!layer.visible) {
-		return false;
+ * @param {string} outPath 
+ * @param {number} globalQuality 
+ * @returns {
+* { 
+* 		width: number;
+* 		height: number;
+* 		type: string;
+* 		srcDocument: Document;
+* 		layerName: string;
+* 		outPath: string;
+* 		name: string;
+* 		filePath: string; 
+* 		quality: number;
+* }
+* }
+*/
+function _getExportInfo(document, layerName, outPath, globalQuality) {
+	var nameArr = layerName.split("@");
+	var nameLen = nameArr.length;
+	if (nameLen <= 1) {
+		return null;
 	}
-	return true;
+
+	var docName = document.name;
+	var info = {
+		width: -1,
+		height: -1,
+		type: '',
+		outPath: outPath + "/" + docName.replace(".psd", ""),
+		srcDocument: document,
+		layerName: layerName,
+		name: nameArr[0],
+		filePath: '',
+		quality: globalQuality,
+	};
+
+	for (var i = 1; i < nameLen; i++) {
+		var curName = nameArr[i];
+		if (curName) {
+			_dealType(curName, info);
+			_dealSize(curName, info);
+		}
+	}
+	_dealDefaultInfo(info);
+
+	return info;
 }
 
-function logVersion() {
-	alert('可能是ps版本兼容问题导致脚本无法选择图层进行导出操作, 请告知插件开发者!');
-}
-
-function dealDefaultInfo(info) {
+function _dealDefaultInfo(info) {
 	if (info.type == "") {
 		info.type = "web-png";
-		dealFilePath('png', info);
+		_dealFilePath('png', info);
 	}
 }
 
-function dealType(nameSlice, info) {
+function _dealType(nameSlice, info) {
 	if (!info.type) {
 		var nNameSlice = nameSlice.toLowerCase();
 		var types = ["pdf", "jpg", "png", "web-jpg", "web-png"];
@@ -298,18 +262,18 @@ function dealType(nameSlice, info) {
 			var type = types[i];
 			if (nNameSlice.indexOf(type) > -1) {
 				info.type = type;
-				dealFilePath(suffixs[i], info);
+				_dealFilePath(suffixs[i], info);
 				break;
 			}
 		}
 	}
 }
 
-function dealFilePath(suffix, info) {
+function _dealFilePath(suffix, info) {
 	info.filePath = info.outPath + "/" + info.name + "." + suffix;
 }
 
-function dealSize(nameSlice, info) {
+function _dealSize(nameSlice, info) {
 	if (info.width < 0 && info.height < 0) {
 		var nNameSlice = nameSlice.toLowerCase();
 		var sizeArr
@@ -339,4 +303,8 @@ function dealSize(nameSlice, info) {
 			}
 		}
 	}
+}
+
+function _logVersion() {
+	alert('可能是ps版本兼容问题导致脚本无法选择图层进行导出操作, 请告知插件开发者!');
 }
