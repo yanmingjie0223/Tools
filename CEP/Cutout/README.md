@@ -8,8 +8,8 @@
 - com.genii.cutout文件拷贝到ps软件位置下面的Required\CEP\extensions中
 - 注：如果出现未签收无法加载拓展，需要在注册表中打开调试模式
     - 打开注册表 win+r输入regedit进入注册表
-    - 找到HKEY_CURRENT_USER\Software\Adobe\CSXS.9（CSXS.9可能是CSXS.10或者其他版本）
-    - 在csxs下新建字符值PlayerDebugMode并设置字段值为1
+    - 找到HKEY_CURRENT_USER\Software\Adobe\CSXS.x（可能是CSXS.9或者CSXS.10或者其他版本）
+    - 在CSXS.x下新建字符值PlayerDebugMode并设置字段值为1
 
 # 使用规则
 - 默认导出png并裁剪透明区域
