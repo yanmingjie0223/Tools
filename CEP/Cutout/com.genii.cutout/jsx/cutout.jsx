@@ -113,26 +113,21 @@ function _exportTo(exportInfo) {
 	}
 	// 调整为自定义size
 	if (exportInfo.width > 0 || exportInfo.height > 0) {
-		var isChange = false;
 		if (exportInfo.width > 0) {
 			width = exportInfo.width;
-			isChange = true;
 		}
-		if (exportInfo.height) {
+		if (exportInfo.height > 0) {
 			height = exportInfo.height;
-			isChange = true;
 		}
 
-		if (isChange) {
-			try {
-				activeDocument.resizeCanvas(
-					UnitValue(width, "px"),
-					UnitValue(height, "px"),
-					AnchorPosition.MIDDLECENTER
-				);
-			} catch (error) {
-				return;
-			}
+		try {
+			activeDocument.resizeCanvas(
+				UnitValue(width, "px"),
+				UnitValue(height, "px"),
+				AnchorPosition.MIDDLECENTER
+			);
+		} catch (error) {
+			return;
 		}
 	}
 
