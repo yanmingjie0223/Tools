@@ -1,3 +1,6 @@
+var EXPORT_TYPES = ["pdf", "jpg", "png", "web-jpg", "web-png"];
+var EXPORT_SUFFIXS = ["pdf", "jpg", "png", "jpg", "png"];
+
 /**
  * 切图导出
  * @param {object} exportOptions 参数
@@ -33,7 +36,7 @@ function cutoutExport(exportOptions) {
 	}
 
 	if (!isEror) {
-		alert('image导出成功!');
+		alert('导出成功!');
 	}
 }
 
@@ -226,9 +229,9 @@ function _getExportInfo(document, layerName, outPath, globalQuality) {
 		width: -1,
 		height: -1,
 		type: '',
-		outPath: outPath + "/" + docName.replace(".psd", ""),
 		srcDocument: document,
 		layerName: layerName,
+		outPath: outPath + "/" + docName.replace(".psd", ""),
 		name: nameArr[0],
 		filePath: '',
 		quality: globalQuality,
@@ -256,13 +259,11 @@ function _dealDefaultInfo(info) {
 function _dealType(nameSlice, info) {
 	if (!info.type) {
 		var nNameSlice = nameSlice.toLowerCase();
-		var types = ["pdf", "jpg", "png", "web-jpg", "web-png"];
-		var suffixs = ["pdf", "jpg", "png", "jpg", "png"];
-		for (var i = 0, len = types.length; i < len; i++) {
-			var type = types[i];
+		for (var i = 0, len = EXPORT_TYPES.length; i < len; i++) {
+			var type = EXPORT_TYPES[i];
 			if (nNameSlice.indexOf(type) > -1) {
 				info.type = type;
-				_dealFilePath(suffixs[i], info);
+				_dealFilePath(EXPORT_SUFFIXS[i], info);
 				break;
 			}
 		}
