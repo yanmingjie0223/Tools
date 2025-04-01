@@ -1,6 +1,7 @@
 declare const cep: {
     fs: {
         showOpenDialog(allowMultipleSelection: boolean, isDir: boolean, title: string, path: string): { data: string[] };
+        showOpenDialogEx(allowMultipleSelection: boolean, isDir: boolean, title: string, path: string): { data: string[] };
         stat(path: string): { err: number };
         makedir(path: string): void;
         readFile(filePath: string): { err: string, data: string };

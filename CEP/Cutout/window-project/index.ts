@@ -7,7 +7,11 @@ const csInterface = main.getCSInterface();
 
 windowCEP.cutoutExport = function (): void {
     const config = Utils.getJson<ExportOptions>(csInterface, "config");
-    const dialogData = cep.fs.showOpenDialog(false, true, "选择切图导出目录", config.outPath);
+    let showOpenDialogFun = cep.fs.showOpenDialogEx;
+    if (!showOpenDialogFun) {
+        showOpenDialogFun = cep.fs.showOpenDialog;
+    }
+    const dialogData = showOpenDialogFun(false, true, "选择切图导出目录", config.outPath);
     const path = dialogData.data[0];
     if (path) {
         const quality = window.document.getElementById("quality") as HTMLInputElement;
