@@ -21,60 +21,45 @@ utils.exportFile = function (document, exportInfo) {
 	var filePath = exportInfo.filePath;
 	var quality = exportInfo.quality;
 	switch (type) {
-		case "pdf": {
+		case "pdf": 
 			var pdfSaveOptions = new PDFSaveOptions();
 			pdfSaveOptions.embedColorProfile = true;
 			pdfSaveOptions.optimizeForWeb = true;
 			document.saveAs(new File(filePath), pdfSaveOptions, true);
 			break;
-		}
-		case "jpg": {
+		case "jpg": 
 			var jpgSaveOptions = new JPEGSaveOptions();
 			jpgSaveOptions.embedColorProfile = true;
 			jpgSaveOptions.formatOptions = FormatOptions.STANDARDBASELINE;
 			jpgSaveOptions.matte = MatteType.NONE;
 			jpgSaveOptions.quality = quality / 100;
+			jpgSaveOptions.scans = 5;
 			document.saveAs(new File(filePath), jpgSaveOptions, true);
 			break;
-		}
-		case "png": {
-			var pngSaveOptions = new PNGSaveOptions();
-			pngSaveOptions.interlaced = false;
-			document.saveAs(new File(filePath), pngSaveOptions, true);
-			break;
-		}
-		case "web-jpg": {
+		case "web-jpg": 
 			var exportOptions = new ExportOptionsSaveForWeb();
 			exportOptions.quality = quality / 100;
 			exportOptions.format = SaveDocumentType.JPEG;
 			exportOptions.includeProfile = true;
-			document.exportDocument(
-				new File(filePath),
-				ExportType.SAVEFORWEB,
-				exportOptions
-			);
+			document.exportDocument(new File(filePath), ExportType.SAVEFORWEB, exportOptions);
 			break;
-		}
-		case "web-png": {
+		case "png":
+		case "web-png": 
 			var exportOptions = new ExportOptionsSaveForWeb();
 			exportOptions.format = SaveDocumentType.PNG;
 			exportOptions.transparency = true;
 			exportOptions.interlaced = false;
 			exportOptions.quality = quality;
+			exportOptions.PNG8 = false;
 			exportOptions.embedColorProfile = false;
 			exportOptions.formatOptions = FormatOptions.STANDARDBASELINE;
 			exportOptions.matte = MatteType.NONE;
-			document.exportDocument(
-				new File(filePath),
-				ExportType.SAVEFORWEB,
-				exportOptions
-			);
+			document.exportDocument(new File(filePath), ExportType.SAVEFORWEB, exportOptions);
 			break;
-		}
-		default: {
+		default: 
 			alert("exportFile 中文件类型未定义：" + type);
 			break;
-		}
+		
 	}
 }
 

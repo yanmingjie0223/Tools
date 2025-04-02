@@ -54,21 +54,6 @@ function _dealExportLayers(document, outPath, quality) {
 			var refLayer = new ActionReference();
 			refLayer.putIndex(charIDToTypeID('Lyr '), i + 1);
 			var layerDesc = executeActionGet(refLayer);
-
-			// var isGroup = false;
-			// var layerSectionKey = stringIDToTypeID('layerSection');
-			// if (layerDesc.hasKey(layerSectionKey)) {
-			// 	var sectionValue = layerDesc.getEnumerationValue(layerSectionKey);
-			// 	if (typeIDToStringID(sectionValue) === 'layerSectionEnd') {
-			// 		isGroup = true;
-			// 	}
-			// }
-			// else if (!isGroup) {
-			// 	if (layerDesc.hasKey(charIDToTypeID('LyGr'))) {
-			// 		isGroup = true;
-			// 	}
-			// }
-
 			var layerName = layerDesc.getString(charIDToTypeID('Nm  '));
 			_dealExportLayer(document, layerName, outPath, quality);
 		} catch (e) {
@@ -100,12 +85,15 @@ function _exportTo(exportInfo) {
 		return;
 	}
 
-	// 合并所有图层
-	if (activeDocument.layers.length > 1) {
+	try {
+		// 合并所有图层
 		activeDocument.mergeVisibleLayers();
+	} catch (error) {
+
 	}
 	// 裁剪透明区域
 	activeDocument.trim(TrimType.TRANSPARENT, true, true, true, true);
+	
 	var width = activeDocument.width.as('px');
 	var height = activeDocument.height.as('px');
 	if (width == 0 || height == 0) {
